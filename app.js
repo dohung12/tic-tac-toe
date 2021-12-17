@@ -1,3 +1,14 @@
+const tileBtns = document.querySelectorAll(".board-tile");
+
+tileBtns.forEach((btn) => {
+  btn.addEventListener("click", tileClickHandler);
+});
+
+function tileClickHandler(e) {
+  const tileIndex = e.currentTarget.dataset.id;
+  Gameboard.add(tileIndex[0], tileIndex[1], "player");
+}
+
 const Gameboard = (() => {
   let gameBoard = [
     ["", "", ""],
