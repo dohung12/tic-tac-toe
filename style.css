@@ -1,0 +1,22 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --tile-size: 10vw;
+  --tile-bgc: blanchedalmond;
+}
+
+.game-board {
+  display: grid;
+  grid-template-columns: repeat(3, var(--tile-size));
+  gap: 20px;
+}
+
+.board-tile {
+  width: 100%;
+  height: var(--tile-size);
+  background-color: var(--tile-bgc);
+}
