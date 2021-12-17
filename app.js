@@ -1,16 +1,3 @@
-const Tile = (() => {
-  const tileBtns = document.querySelectorAll(".board-tile");
-
-  tileBtns.forEach((btn) => {
-    btn.addEventListener("click", tileClickHandler);
-  });
-
-  function tileClickHandler(e) {
-    const tileIndex = e.currentTarget.dataset.id;
-    Gameboard.add(tileIndex[0], tileIndex[1], "player");
-  }
-})();
-
 const Gameboard = (() => {
   let gameBoard = [
     ["", "", ""],
@@ -18,35 +5,27 @@ const Gameboard = (() => {
     ["", "", ""],
   ];
 
-  function updateTile(row, col, playerOrComputer) {
-    const tile = document.querySelector(`[data-id="${row}${col}"]`);
-    const icon = document.createElement("i");
-    if (playerOrComputer === "player") {
-      icon.setAttribute("class", "fas fa-times");
-    } else {
-      icon.setAttribute("class", "far fa-circle");
-    }
-    tile.appendChild(icon);
-  }
-
-  function add(row, col, playerOrComputer) {
-    // TODO
-    // check already tick
-    // gameBoard[row][col] !== ""
-    updateTile(row, col, playerOrComputer);
-
+  function updateGameBoard(row, col, playerOrComputer) {
     if (playerOrComputer === "player") {
       gameBoard[row][col] = "X";
     } else {
       gameBoard[row][col] = "O";
     }
+  }
 
-    if (checkWin()) {
-      displayWinner(playerOrComputer);
-    } else if (!checkEmpty()) {
-      displayMatchTie();
-    } else if (checkEmpty() && playerOrComputer === "player") {
-      computerTurn();
+  function add(row, col, playerOrComputer) {
+    if (gameBoard[row][col] === "") {
+      DisplayControl.updateTile(row, col, playerOrComputer);
+      updateGameBoard(row, col, playerOrComputer);
+
+      if (checkWin()) {
+        displayWinner(playerOrComputer);
+        DisplayControl.disable();
+      } else if (!checkEmpty()) {
+        displayMatchTie();
+      } else if (checkEmpty() && playerOrComputer === "player") {
+        computerTurn();
+      }
     }
   }
 
@@ -129,4 +108,38 @@ const Gameboard = (() => {
   }
 
   return { add, gameBoard, checkWin };
+})();
+
+const DisplayControl = (() => {
+  const tileBtns = document.querySelectorAll(".board-tile");
+
+  tileBtns.forEach((btn) => {
+    btn.addEventListener("click", tileClickHandler);
+  });
+
+  function tileClickHandler(e) {
+    const tileIndex = e.currentTarget.dataset.id;
+    Gameboard.add(tileIndex[0], tileIndex[1], "player");
+  }
+
+  function updateTile(row, col, playerOrComputer) {
+    const tile = document.querySelector(`[data-id="${row}${col}"]`);
+    const icon = document.createElement("i");
+    if (playerOrComputer === "player") {
+      icon.setAttribute("class", "fas fa-times");
+    } else {
+      icon.setAttribute("class", "far fa-circle");
+    }
+    tile.appendChild(icon);
+  }
+
+  function disable() {
+    tileBtns.forEach((btn) => btn.setAttribute("disabled", true));
+  }
+
+  function restart() {
+    tileBtns.forEach((btn) => (btn.innerHTML = ""));
+  }
+
+  return { updateTile, disable };
 })();
