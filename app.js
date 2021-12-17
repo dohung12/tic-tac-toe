@@ -107,16 +107,26 @@ const Gameboard = (() => {
     return flag;
   }
 
-  return { add, gameBoard, checkWin };
+  function resetBoard() {
+    for (let i = 0; i < gameBoard.length; i++) {
+      for (let j = 0; j < gameBoard[i].length; j++) {
+        gameBoard[i][j] = "";
+      }
+    }
+  }
+  return { add, gameBoard, checkWin, resetBoard };
 })();
 
 const DisplayControl = (() => {
   const tileBtns = document.querySelectorAll(".board-tile");
-
+  const restartBtn = document.querySelector(".restart-btn");
+  // EVENT HANDLER
   tileBtns.forEach((btn) => {
     btn.addEventListener("click", tileClickHandler);
   });
+  restartBtn.addEventListener("click", restart);
 
+  // FUNCTIONS
   function tileClickHandler(e) {
     const tileIndex = e.currentTarget.dataset.id;
     Gameboard.add(tileIndex[0], tileIndex[1], "player");
@@ -138,8 +148,12 @@ const DisplayControl = (() => {
   }
 
   function restart() {
-    tileBtns.forEach((btn) => (btn.innerHTML = ""));
+    tileBtns.forEach((btn) => {
+      btn.innerHTML = "";
+      btn.removeAttribute("disabled");
+    });
+    Gameboard.resetBoard();
   }
 
-  return { updateTile, disable };
+  return { updateTile, disable, restart };
 })();
