@@ -179,6 +179,9 @@ const DisplayControl = (() => {
       btn.removeAttribute("disabled");
     });
     Gameboard.resetBoard();
+    if (!form.classList.contains("hide-form")) {
+      form.classList.add("hide-form");
+    }
   }
 
   return { updateTile, disable, displayWinner };
