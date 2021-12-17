@@ -16,7 +16,8 @@ const Gameboard = (() => {
     ["", "", ""],
   ];
 
-  function updateTile(playerOrComputer, tile) {
+  function updateTile(row, col, playerOrComputer) {
+    const tile = document.querySelector(`[data-id="${row}${col}"]`);
     const icon = document.createElement("i");
     if (playerOrComputer === "player") {
       icon.setAttribute("class", "fas fa-times");
@@ -27,15 +28,39 @@ const Gameboard = (() => {
   }
 
   function add(row, col, playerOrComputer) {
-    const tile = document.querySelector(`[data-id="${row}${col}"]`);
-    updateTile(playerOrComputer, tile);
-    gameBoard[row][col] = (() => (playerOrComputer === "player" ? "x" : "o"))();
+    updateTile(row, col, playerOrComputer);
+
+    if (playerOrComputer === "player") {
+      gameBoard[row][col] = "X";
+    } else {
+      gameBoard[row][col] = "O";
+    }
 
     if (checkWin()) {
       displayWinner(playerOrComputer);
     } else if (!checkEmpty()) {
       displayMatchTie();
+    } else if (checkEmpty() && playerOrComputer === "player") {
+      computerTurn();
     }
+  }
+
+  function computerTurn() {
+    function getEmptyTile() {
+      let localArr = [];
+      for (let i = 0; i < gameBoard.length; i++) {
+        for (let j = 0; j < gameBoard[i].length; j++) {
+          if (gameBoard[i][j] === "") {
+            localArr.push([i, j]);
+          }
+        }
+      }
+      return localArr[Math.floor(Math.random() * localArr.length)];
+    }
+
+    const index = getEmptyTile();
+    console.log(index);
+    add(index[0], index[1], "computer");
   }
 
   function displayMatchTie() {
