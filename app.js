@@ -1,3 +1,7 @@
+const Players = (playerName) => {
+  return { playerName };
+};
+
 const Gameboard = (() => {
   let gameBoard = [
     ["", "", ""],
@@ -20,7 +24,6 @@ const Gameboard = (() => {
 
       if (checkWin()) {
         displayWinner(playerOrComputer);
-        DisplayControl.disable();
       } else if (!checkEmpty()) {
         displayMatchTie();
       } else if (checkEmpty() && playerOrComputer === "player") {
@@ -54,7 +57,8 @@ const Gameboard = (() => {
   function displayWinner(playerOrComputer) {
     //   TODO
     // disable all btns until press restart
-    console.log(`Congrats! ${playerOrComputer} has  won`);
+    DisplayControl.disable();
+    DisplayControl.displayWinner(playerOrComputer);
   }
 
   function checkEmpty() {
@@ -114,19 +118,30 @@ const Gameboard = (() => {
       }
     }
   }
-  return { add, gameBoard, checkWin, resetBoard };
+  return { add, resetBoard };
 })();
 
 const DisplayControl = (() => {
   const tileBtns = document.querySelectorAll(".board-tile");
   const restartBtn = document.querySelector(".restart-btn");
+  const form = document.querySelector("form");
+  let player = Players("Player");
   // EVENT HANDLER
   tileBtns.forEach((btn) => {
     btn.addEventListener("click", tileClickHandler);
   });
   restartBtn.addEventListener("click", restart);
-
+  form.addEventListener("submit", formSubmitHandler);
   // FUNCTIONS
+  function formSubmitHandler(e) {
+    e.preventDefault();
+    const inputName = document.querySelector("input");
+    player = Players(inputName.value);
+    inputName.value = "";
+    form.classList.add("hide-form");
+    restart();
+  }
+
   function tileClickHandler(e) {
     const tileIndex = e.currentTarget.dataset.id;
     Gameboard.add(tileIndex[0], tileIndex[1], "player");
@@ -143,11 +158,22 @@ const DisplayControl = (() => {
     tile.appendChild(icon);
   }
 
+  function displayWinner(playerOrComputer) {
+    const matchResult = document.querySelector(".match-result");
+    if (playerOrComputer === "player") {
+      matchResult.innerText = player.playerName + " has won!";
+    } else {
+      matchResult.innerText = "Computer has won!";
+    }
+    form.classList.remove("hide-form");
+  }
+
   function disable() {
     tileBtns.forEach((btn) => btn.setAttribute("disabled", true));
   }
 
   function restart() {
+    restartBtn.innerText = "Restart ";
     tileBtns.forEach((btn) => {
       btn.innerHTML = "";
       btn.removeAttribute("disabled");
@@ -155,5 +181,5 @@ const DisplayControl = (() => {
     Gameboard.resetBoard();
   }
 
-  return { updateTile, disable, restart };
+  return { updateTile, disable, displayWinner };
 })();
