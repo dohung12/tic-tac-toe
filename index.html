@@ -14,7 +14,16 @@
   </head>
   <body>
     <h2>Let's play Tic Tac Toe</h2>
-    <button class="btn restart-btn">Restart</button>
+    <button class="btn restart-btn">Start</button>
+    <p class="match-result"></p>
+    <form action="">
+      <fieldset>
+        <legend>Please input your name</legend>
+        <label for="name">Name: </label>
+        <input type="text" id="name" name="name" />
+        <button type="submit" class="btn submit-btn">Submit</button>
+      </fieldset>
+    </form>
     <div class="game-board">
       <button class="btn board-tile" data-id="00"></button>
       <button class="btn board-tile" data-id="01"></button>
