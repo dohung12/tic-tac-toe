@@ -1,13 +1,15 @@
-const tileBtns = document.querySelectorAll(".board-tile");
+const Tile = (() => {
+  const tileBtns = document.querySelectorAll(".board-tile");
 
-tileBtns.forEach((btn) => {
-  btn.addEventListener("click", tileClickHandler);
-});
+  tileBtns.forEach((btn) => {
+    btn.addEventListener("click", tileClickHandler);
+  });
 
-function tileClickHandler(e) {
-  const tileIndex = e.currentTarget.dataset.id;
-  Gameboard.add(tileIndex[0], tileIndex[1], "player");
-}
+  function tileClickHandler(e) {
+    const tileIndex = e.currentTarget.dataset.id;
+    Gameboard.add(tileIndex[0], tileIndex[1], "player");
+  }
+})();
 
 const Gameboard = (() => {
   let gameBoard = [
@@ -28,6 +30,9 @@ const Gameboard = (() => {
   }
 
   function add(row, col, playerOrComputer) {
+    // TODO
+    // check already tick
+    // gameBoard[row][col] !== ""
     updateTile(row, col, playerOrComputer);
 
     if (playerOrComputer === "player") {
@@ -59,7 +64,6 @@ const Gameboard = (() => {
     }
 
     const index = getEmptyTile();
-    console.log(index);
     add(index[0], index[1], "computer");
   }
 
