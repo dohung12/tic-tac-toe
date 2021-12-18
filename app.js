@@ -150,7 +150,7 @@ const DisplayControl = (() => {
     if (playerOrComputer === "player") {
       icon.setAttribute("class", "fas fa-times");
     } else {
-      icon.setAttribute("class", "far fa-circle");
+      icon.setAttribute("class", "fas fa-circle");
     }
     tile.appendChild(icon);
   }

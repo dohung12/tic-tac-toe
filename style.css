@@ -5,16 +5,17 @@
   font-family: var(--normal-font);
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Roboto&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap");
 
 :root {
   --tile-size: 15vw;
   --tile-bgc: blanchedalmond;
-  --header-font: "Libre Baskerville", serif;
-  --normal-font: "Roboto", sans-serif;
+  --normal-font: "Space Mono", monospace;
 }
 /* page display */
 body {
+  background-color: #f1faee;
+  color: #1d3557;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,7 +26,7 @@ body {
 header {
   width: 100vw;
 
-  background-color: wheat;
+  background-color: #a8dadc;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
@@ -35,26 +36,41 @@ h2 {
   font-weight: 800;
   text-align: center;
 }
+h2 i {
+  font-size: 0.8em;
+  color: #e63946;
+}
 /* MAIN */
 main {
+  margin-top: 5vh;
   display: flex;
+  gap: 10vw;
 }
 .game-board {
   padding: 20px;
-  width: 100%;
+
   height: 100%;
   display: grid;
   grid-template-columns: repeat(3, 150px);
   align-self: center;
+  gap: 1px;
+  background-color: #1d3557;
 }
 
 .board-tile {
   width: 150px;
   height: 150px;
-  background-color: var(--tile-bgc);
-  font-size: 64px;
+  background-color: #a8dadc;
+  font-size: 100px;
+  color: #e63946;
 }
-
+.board-tile:hover {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  background-color: #e6394759;
+}
+.board-tile:disabled {
+  background-color: rgba(17, 17, 17, 0.281);
+}
 /* ASIDE */
 
 .aside {
@@ -72,15 +88,45 @@ main {
   width: 100%;
   height: 150px;
   padding: 20px;
-  background-color: antiquewhite;
+  background-color: #1d3557;
+  color: #e63946;
   border: 2px solid black;
-  font-size: 32px;
+  font-size: 40px;
   font-family: var(--header-font);
   font-weight: 800;
   text-transform: capitalize;
 }
 
 .restart-btn {
-  font-size: 20px;
+  font-size: 32px;
   padding: 10px 20px;
+  color: #1d3557;
+  font-weight: 800;
+  transition: all 0.3s ease-in-out;
+  background-color: #f1faee;
+}
+
+.restart-btn:hover {
+  background-color: #1d3557;
+  color: #a8dadc;
+}
+
+input {
+  margin: 10px 0;
+  width: 100%;
+  font-size: 20px;
+}
+
+.submit-btn {
+  align-self: center;
+  padding: 5px 10px;
+  font-family: var(--normal-font);
+  font-size: 20px;
+  background-color: transparent;
+  color: #1d3557;
+}
+
+.submit-btn:hover {
+  background-color: #1d3557;
+  color: #a8dadc;
 }
