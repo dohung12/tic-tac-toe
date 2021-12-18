@@ -1,5 +1,11 @@
 const Players = (playerName) => {
-  return { playerName };
+  this.name = playerName;
+
+  const displayWon = () => {
+    return `${playerName} has won!`;
+  };
+
+  return { name: this.name, displayWon };
 };
 
 const Gameboard = (() => {
@@ -8,7 +14,23 @@ const Gameboard = (() => {
     ["", "", ""],
     ["", "", ""],
   ];
+  function add(row, col, playerOrComputer) {
+    if (gameBoard[row][col] === "") {
+      DisplayControl.updateTile(row, col, playerOrComputer);
+      updateGameBoard(row, col, playerOrComputer);
 
+      checkGameStatus(playerOrComputer);
+    }
+  }
+  function checkGameStatus(playerOrComputer) {
+    if (checkWin()) {
+      displayWinner(playerOrComputer);
+    } else if (!checkEmpty()) {
+      displayMatchTie();
+    } else if (checkEmpty() && playerOrComputer === "player") {
+      computerTurn();
+    }
+  }
   function updateGameBoard(row, col, playerOrComputer) {
     if (playerOrComputer === "player") {
       gameBoard[row][col] = "X";
@@ -16,22 +38,6 @@ const Gameboard = (() => {
       gameBoard[row][col] = "O";
     }
   }
-
-  function add(row, col, playerOrComputer) {
-    if (gameBoard[row][col] === "") {
-      DisplayControl.updateTile(row, col, playerOrComputer);
-      updateGameBoard(row, col, playerOrComputer);
-
-      if (checkWin()) {
-        displayWinner(playerOrComputer);
-      } else if (!checkEmpty()) {
-        displayMatchTie();
-      } else if (checkEmpty() && playerOrComputer === "player") {
-        computerTurn();
-      }
-    }
-  }
-
   function computerTurn() {
     function getEmptyTile() {
       let localArr = [];
@@ -48,19 +54,19 @@ const Gameboard = (() => {
     const index = getEmptyTile();
     add(index[0], index[1], "computer");
   }
-
   function displayMatchTie() {
-    // TODO
-    console.log("Match tie");
+    DisplayControl.disable();
+    DisplayControl.displayGameStatus("Match tie");
   }
-
   function displayWinner(playerOrComputer) {
-    //   TODO
     // disable all btns until press restart
     DisplayControl.disable();
-    DisplayControl.displayWinner(playerOrComputer);
+    if (playerOrComputer === "player") {
+      DisplayControl.displayPlayerWon();
+    } else {
+      DisplayControl.displayGameStatus("Computer has won!");
+    }
   }
-
   function checkEmpty() {
     for (let i = 0; i < gameBoard.length; i++) {
       for (let j = 0; j < gameBoard[i].length; j++) {
@@ -71,7 +77,6 @@ const Gameboard = (() => {
     }
     return false;
   }
-
   function checkWin() {
     let flag = false;
     function checkRow(row) {
@@ -110,7 +115,6 @@ const Gameboard = (() => {
     flag = flag || checkAntiDiagonal() || checkMainDiagonal();
     return flag;
   }
-
   function resetBoard() {
     for (let i = 0; i < gameBoard.length; i++) {
       for (let j = 0; j < gameBoard[i].length; j++) {
@@ -124,23 +128,16 @@ const Gameboard = (() => {
 const DisplayControl = (() => {
   const tileBtns = document.querySelectorAll(".board-tile");
   const restartBtn = document.querySelector(".restart-btn");
-  const form = document.querySelector("form");
-  let player = Players("Player");
+  const matchResult = document.querySelector(".match-result");
+  let player;
   // EVENT HANDLER
   tileBtns.forEach((btn) => {
     btn.addEventListener("click", tileClickHandler);
   });
+
   restartBtn.addEventListener("click", restart);
-  form.addEventListener("submit", formSubmitHandler);
+
   // FUNCTIONS
-  function formSubmitHandler(e) {
-    e.preventDefault();
-    const inputName = document.querySelector("input");
-    player = Players(inputName.value);
-    inputName.value = "";
-    form.classList.add("hide-form");
-    restart();
-  }
 
   function tileClickHandler(e) {
     const tileIndex = e.currentTarget.dataset.id;
@@ -158,14 +155,12 @@ const DisplayControl = (() => {
     tile.appendChild(icon);
   }
 
-  function displayWinner(playerOrComputer) {
-    const matchResult = document.querySelector(".match-result");
-    if (playerOrComputer === "player") {
-      matchResult.innerText = player.playerName + " has won!";
-    } else {
-      matchResult.innerText = "Computer has won!";
-    }
-    form.classList.remove("hide-form");
+  function displayGameStatus(str) {
+    matchResult.innerText = str;
+  }
+
+  function displayPlayerWon() {
+    displayGameStatus(userInput.player.displayWon());
   }
 
   function disable() {
@@ -173,16 +168,26 @@ const DisplayControl = (() => {
   }
 
   function restart() {
+    matchResult.textContent = "Have a nice game";
     restartBtn.innerText = "Restart ";
     tileBtns.forEach((btn) => {
       btn.innerHTML = "";
       btn.removeAttribute("disabled");
     });
+
     Gameboard.resetBoard();
-    if (!form.classList.contains("hide-form")) {
-      form.classList.add("hide-form");
-    }
   }
 
-  return { updateTile, disable, displayWinner };
+  return { updateTile, restart, disable, displayGameStatus, displayPlayerWon };
 })();
+
+const userInput = (() => {
+  let playerName = prompt("Please input your name");
+  while (playerName === null || playerName === "" || playerName === " ") {
+    playerName = prompt("Please input your name");
+  }
+  let player = Players(playerName);
+  return { player };
+})();
+
+window.addEventListener("DOMContentLoaded", userInput);

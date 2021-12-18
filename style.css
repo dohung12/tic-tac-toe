@@ -58,6 +58,7 @@ main {
 /* ASIDE */
 
 .aside {
+  width: 300px;
   margin: 20px;
   font-size: 20px;
   display: flex;
@@ -72,6 +73,11 @@ main {
   height: 150px;
   padding: 20px;
   background-color: antiquewhite;
+  border: 2px solid black;
+  font-size: 32px;
+  font-family: var(--header-font);
+  font-weight: 800;
+  text-transform: capitalize;
 }
 
 .restart-btn {
