@@ -160,7 +160,7 @@ const DisplayControl = (() => {
   }
 
   function displayPlayerWon() {
-    displayGameStatus(userInput.player.displayWon());
+    displayGameStatus(userInput.displayWon());
   }
 
   function disable() {
@@ -182,12 +182,21 @@ const DisplayControl = (() => {
 })();
 
 const userInput = (() => {
-  let playerName = prompt("Please input your name");
-  while (playerName === null || playerName === "" || playerName === " ") {
-    playerName = prompt("Please input your name");
-  }
-  let player = Players(playerName);
-  return { player };
-})();
+  const form = document.querySelector("form");
+  let playerName = "player";
 
-window.addEventListener("DOMContentLoaded", userInput);
+  form.addEventListener("submit", formSubmitHandler);
+
+  function formSubmitHandler(e) {
+    e.preventDefault();
+    const input = document.querySelector("#name");
+    playerName = input.value;
+    input.value = "";
+  }
+
+  function displayWon() {
+    return playerName + " has won";
+  }
+
+  return { displayWon };
+})();
